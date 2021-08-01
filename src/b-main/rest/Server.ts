@@ -3,11 +3,7 @@ import * as http from "http"
 import morgan from "morgan"
 import * as bodyParser from "body-parser"
 import cors from "cors"
-import { administratorAuth } from "./AdministratorAuth"
 import { IStuff } from "../index"
-import { GamesRouter } from "./GamesRouter"
-import { SocketServer } from "./SocketServer"
-import { AdministratorRouter } from "./AdministratorRouter"
 import { PublicRouter } from "./PublicRouter"
 
 export const Server = (stuff: IStuff) => {
@@ -18,13 +14,10 @@ export const Server = (stuff: IStuff) => {
 	app.use(bodyParser.json())
 	app.disable("x-powered-by")
 
-	app.use("/games", GamesRouter(stuff))
 	app.use("/public", PublicRouter(stuff))
-	app.use("/administrator", administratorAuth(stuff), AdministratorRouter(stuff))
 
 	const server = http.createServer(app)
 
-	SocketServer({ server, stuff })
 
 	const start = () => {
 		return new Promise<void>((resolve) => {

@@ -29,7 +29,7 @@ module.exports = (envs) => {
 				filename: "index.html",
 				inject: "body",
 			}),
-			new FaviconsWebpackPlugin(path.resolve(__dirname, "..", "assets", "ace-of-diamonds.png")),
+			new FaviconsWebpackPlugin(path.resolve(__dirname, "..", "assets", "email.png")),
 		],
 	}
 }

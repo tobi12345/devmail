@@ -6,10 +6,8 @@
 		"watch": "tsc --build tsconfig.json --watch ",
 		"build": "tsc --build tsconfig.json",
 		"start:backend": "node ./dist/b-main/index.js",
-		"build:game": "webpack --config ./config_webpack/webpack.config.js --mode production --env.project=game",
-		"start:game": "webpack-dev-server --config ./config_webpack/dev.webpack.config.js --env.project=game --env.port=3001",
-		"start:admin": "webpack-dev-server --config ./config_webpack/dev.webpack.config.js --env.project=admin --env.port=3002",
-		"build:admin": "webpack --config ./config_webpack/webpack.config.js --mode production --env.project=admin",
+		"build:inbox": "webpack --config ./config_webpack/webpack.config.js --mode production --env.project=inbox",
+		"start:inbox": "webpack-dev-server --config ./config_webpack/dev.webpack.config.js --env.project=inbox --env.port=3001",
 		"prettify": "prettier --config .prettierrc.js --ignore-path .prettierignore --write ./src/**/*.{ts,tsx,js,jsx}"
 	},
 	"husky": {
@@ -42,11 +40,11 @@
 		"html-webpack-plugin": "^4.5.0",
 		"prettier": "^2.1.2",
 		"pretty-quick": "^3.0.2",
+		"react-refresh": "^0.9.0",
+		"source-map-support": "^0.5.19",
 		"style-loader": "^1.3.0",
 		"webpack": "^4.44.2",
 		"webpack-cli": "^3.3.12",
-		"react-refresh": "^0.9.0",
-		"source-map-support": "^0.5.19",
 		"webpack-dev-server": "^3.11.0"
 	},
 	"dependencies": {
