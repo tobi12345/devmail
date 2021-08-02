@@ -7,9 +7,13 @@ import "antd/dist/antd.css"
 const GlobalStyles = createGlobalStyle`
 	body {
 		margin: 0;
+		padding: 0;
+		width: 300px;
+		height: 400px;
 	}
 	#root {
-		height: 100%;
+		width: 300px;
+		height: 400px;
 	}
 `
 

@@ -7,6 +7,7 @@
 		"build": "tsc --build tsconfig.json",
 		"start:backend": "node ./dist/b-main/index.js",
 		"build:inbox": "webpack --config ./config_webpack/webpack.config.js --mode production --env.project=inbox",
+		"build:extension": "node ./scripts/bundelChromeExtension.js",
 		"start:inbox": "webpack-dev-server --config ./config_webpack/dev.webpack.config.js --env.project=inbox --env.port=3001",
 		"prettify": "prettier --config .prettierrc.js --ignore-path .prettierignore --write ./src/**/*.{ts,tsx,js,jsx}"
 	},
