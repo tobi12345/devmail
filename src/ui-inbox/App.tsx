@@ -1,10 +1,12 @@
-import React, { useMemo } from "react"
+import React, { useContext, useMemo } from "react"
 import axios, { AxiosError } from "axios"
 import { useConfig } from "./Config"
-import { Services, ServicesContext } from "./services/Services"
 import { ReactQueryConfigProvider, ReactQueryConfig } from "react-query"
 import { RootRouter } from "./RootRouter"
 import { BrowserRouter } from "react-router-dom"
+
+const AxiosInstanceContext = React.createContext(axios.create())
+export const useAxiosInstance = () => useContext(AxiosInstanceContext)
 
 const reactQueryConfig: ReactQueryConfig = {
 	queries: {
@@ -38,15 +40,13 @@ export const App = () => {
 		return client
 	}, [config])
 
-	const services = useMemo(() => Services(api), [api])
-
 	return (
-		<ServicesContext.Provider value={services}>
+		<AxiosInstanceContext.Provider value={api}>
 			<ReactQueryConfigProvider config={reactQueryConfig}>
 				<BrowserRouter>
 					<RootRouter />
 				</BrowserRouter>
 			</ReactQueryConfigProvider>
-		</ServicesContext.Provider>
+		</AxiosInstanceContext.Provider>
 	)
 }

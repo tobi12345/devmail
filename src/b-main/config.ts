@@ -10,6 +10,9 @@ export interface IConfig extends IBaseConfig {
 	jwt: {
 		secret: string
 	}
+	smtp: {
+		port: number
+	}
 	passwordSecret: string
 }
 
@@ -33,16 +36,14 @@ export const configFromEnv = (): IConfig => {
 		},
 		passwordSecret: process.env["PASSWORD_SECRET"] || "72865779884567890093833338832837151253192",
 		rest: {
-			port: parseInt(process.env["PORT"] || "4001"),
+			port: parseInt(process.env["REST_PORT"] || "4001"),
 			key: process.env["REST_KEY"] || "4a76dbd4-688e-4921-90b8-2c2041d4b77c",
 		},
 		jwt: {
 			secret: process.env["JWT_SECRET"] || "",
 		},
-		instanceID: process.env["INSTANCE_ID"] || "main",
-		redis: {
-			host: process.env["REDIS_HOST"] || "localhost",
-			port: parseInt(process.env["REDIS_PORT"] || "6379"),
+		smtp: {
+			port: parseInt(process.env["SMTP_PORT"] || "4000"),
 		},
 	}
 }

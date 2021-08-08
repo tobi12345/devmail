@@ -5,6 +5,8 @@ import { Server } from "./rest/Server"
 import { IServices, Services } from "../database/services/Services"
 import { loadEnvFromDotenv } from "../b-shared/utils/loadEnvFromDotenv"
 import { onShutdown } from "../b-shared/onShutdown"
+import * as Express from "express"
+import { SMTPServer } from "./SMTPServer"
 
 require("source-map-support").install()
 
@@ -15,6 +17,7 @@ export interface IStuff {
 	database: IDatabaseBaseClient
 	services: IServices
 	config: IConfig
+	clients: Map<string, Express.Response>
 }
 
 loadEnvFromDotenv(nodeEnv || "development")
@@ -38,12 +41,17 @@ loadEnvFromDotenv(nodeEnv || "development")
 		config,
 		database,
 		services,
+		clients: new Map(),
 	}
 
-	const server = Server(stuff)
-	await server.start()
+	const restServer = Server(stuff)
+	await restServer.start()
+
+	const smtpServer = SMTPServer(stuff)
+	await smtpServer.start()
 
 	await onShutdown()
-	await server.close()
+	await restServer.close()
+	await smtpServer.close()
 	await database.close()
 })()

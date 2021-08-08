@@ -8,11 +8,11 @@ const GlobalStyles = createGlobalStyle`
 	body {
 		margin: 0;
 		padding: 0;
-		width: 300px;
+		width: 500px;
 		height: 400px;
 	}
 	#root {
-		width: 300px;
+		width: 500px;
 		height: 400px;
 	}
 `
