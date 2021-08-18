@@ -1,32 +1,41 @@
 import { IStuff } from "."
 import { SMTPServer as _SMTPServer } from "smtp-server"
 import { simpleParser } from "mailparser"
+import { getEmailAddress } from "../database/queries/getEmailAddress"
+import { createEmail } from "../database/queries/createEmail"
 
 export const SMTPServer = (stuff: IStuff) => {
-	const { config, clients } = stuff
+	const { config, clients, database } = stuff
 
 	const server = new _SMTPServer({
 		onData(stream, session, callback) {
-			simpleParser(stream, {}, (err, parsed) => {
+			simpleParser(stream, {}, async (err, email) => {
 				if (err) {
 					console.error("Error while paring mail", err)
 					return
 				}
 
-				if (!parsed.to) {
+				if (!email.to) {
 					console.warn("parsed.to is undefined")
 					return
 				}
 
-				if (Array.isArray(parsed.to)) {
+				if (Array.isArray(email.to)) {
 					console.warn("parsed.to is array")
 					return
 				}
+				const emailAddress = email.to.text.split("@")[0]
 
-				const id = parsed.to.text.split("@")[0]
-				const client = clients.get(id)
+				const emailAddressExists = await getEmailAddress(database, { emailAddress })
+				if (!emailAddressExists) {
+					return
+				}
+
+				await createEmail(database, { emailAddress, email })
+
+				const client = clients.get(emailAddress)
 				if (client) {
-					client.write(`data: ${JSON.stringify(parsed)}\n\n`)
+					client.write(`data: ${JSON.stringify(email)}\n\n`)
 				}
 			})
 

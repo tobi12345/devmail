@@ -4,7 +4,6 @@ import morgan from "morgan"
 import * as bodyParser from "body-parser"
 import cors from "cors"
 import { IStuff } from "../index"
-import { PublicRouter } from "./PublicRouter"
 import { EMailRouter } from "./EMailRouter"
 
 export const Server = (stuff: IStuff) => {
@@ -15,7 +14,6 @@ export const Server = (stuff: IStuff) => {
 	app.use(bodyParser.json())
 	app.disable("x-powered-by")
 
-	app.use("/public", PublicRouter(stuff))
 	app.use("/emails", EMailRouter(stuff))
 
 	const server = http.createServer(app)

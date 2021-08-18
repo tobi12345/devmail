@@ -1,38 +1,52 @@
-import { Router } from "express"
 import { isCheckError, Keys, TypeString } from "../../types-shared/typechecker"
 import { IStuff } from ".."
+import { BaseRouter, CheckRequestConvert, ErrorHandlerChecked } from "../../b-shared/TypedExpress"
+import { getEmailByAddress } from "../../database/queries/getEmailsByAddress"
+import { getEmailAddress } from "../../database/queries/getEmailAddress"
+import { createEmailAddress } from "../../database/queries/createEmailAddress"
+
+const checkGetMailRequest = Keys({
+	params: Keys({
+		emailAddress: TypeString,
+	}),
+})
 
 export const EMailRouter = (stuff: IStuff) => {
-	const router = Router()
+	const router = BaseRouter()
+	const { database } = stuff
 
-	const checkGetMailRequest = Keys({
-		params: Keys({
-			email: TypeString,
-		}),
-	})
+	router.get(
+		"/:emailAddress",
+		CheckRequestConvert(
+			checkGetMailRequest,
+			ErrorHandlerChecked(async (req, { params: { emailAddress } }, res) => {
+				const emailAddressExists = await getEmailAddress(database, { emailAddress })
 
-	router.get("/:email", async (req, res) => {
-		const checkerResult = checkGetMailRequest(req)
+				if (!emailAddressExists) {
+					await createEmailAddress(database, { emailAddress })
+				}
 
-		if (isCheckError(checkerResult)) {
-			return void res.status(403).json({ errors: checkerResult[0] })
-		}
+				const headers = {
+					"Content-Type": "text/event-stream",
+					Connection: "keep-alive",
+					"Cache-Control": "no-cache",
+				}
+				res.writeHead(200, headers)
+				res.flushHeaders()
+				stuff.clients.set(emailAddress, res)
 
-		const { email } = checkerResult[1].params
+				const emails = await getEmailByAddress(database, { emailAddress })
+				for (let { email } of emails) {
+					res.write(`data: ${JSON.stringify(email)}\n\n`)
+				}
 
-		const headers = {
-			"Content-Type": "text/event-stream",
-			Connection: "keep-alive",
-			"Cache-Control": "no-cache",
-		}
-		res.writeHead(200, headers)
-		res.flushHeaders()
-		stuff.clients.set(email, res)
-		req.on("close", () => {
-			console.log(`${email} Connection closed`)
-			stuff.clients.delete(email)
-		})
-	})
+				req.on("close", () => {
+					console.log(`${emailAddress} Connection closed`)
+					stuff.clients.delete(emailAddress)
+				})
+			}),
+		),
+	)
 
-	return router
+	return router as any
 }
