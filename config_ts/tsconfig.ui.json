@@ -13,7 +13,7 @@
 		"downlevelIteration": true,
 		"allowSyntheticDefaultImports": true
 	},
-	"include": ["../src/ui-inbox"],
+	"include": ["../src/ui-inbox", "../src/ui-background"],
 	"references": [
 		{
 			"path": "./tsconfig.types.shared.json"

@@ -8,12 +8,12 @@ const GlobalStyles = createGlobalStyle`
 	body {
 		margin: 0;
 		padding: 0;
-		width: 500px;
-		height: 400px;
+		width: 700px;
+		height: 530px;
 	}
 	#root {
-		width: 500px;
-		height: 400px;
+		width: 700px;
+		height: 530px;
 	}
 `
 

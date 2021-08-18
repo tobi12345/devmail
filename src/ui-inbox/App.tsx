@@ -2,8 +2,7 @@ import React, { useContext, useMemo } from "react"
 import axios, { AxiosError } from "axios"
 import { useConfig } from "./Config"
 import { ReactQueryConfigProvider, ReactQueryConfig } from "react-query"
-import { RootRouter } from "./RootRouter"
-import { BrowserRouter } from "react-router-dom"
+import { Inbox } from "./components/views/Inbox"
 
 const AxiosInstanceContext = React.createContext(axios.create())
 export const useAxiosInstance = () => useContext(AxiosInstanceContext)
@@ -43,9 +42,7 @@ export const App = () => {
 	return (
 		<AxiosInstanceContext.Provider value={api}>
 			<ReactQueryConfigProvider config={reactQueryConfig}>
-				<BrowserRouter>
-					<RootRouter />
-				</BrowserRouter>
+				<Inbox />
 			</ReactQueryConfigProvider>
 		</AxiosInstanceContext.Provider>
 	)
