@@ -1,4 +1,7 @@
 import { useState, useEffect, useCallback } from "react"
+import * as uuid from "uuid"
+
+export const generateEMail = () => uuid.v4().replace(/-/g, "").substr(0, 12)
 
 const getEmailAddress = async () => {
 	if (chrome.storage) {
@@ -22,13 +25,13 @@ export const useEmailAddress = () => {
 
 	useEffect(() => {
 		getEmailAddress().then((address) => {
-			if (address) {
-				_setEmailAddress(address)
-			}
+			if (address) _setEmailAddress(address)
+			else setEmailAddress()
 		})
 	}, [])
 
-	const setEmailAddress = useCallback((address: string) => {
+	const setEmailAddress = useCallback(() => {
+		const address = generateEMail()
 		storeEmailAddress(address)
 		_setEmailAddress(address)
 	}, [])

@@ -3,9 +3,6 @@ import styled from "styled-components"
 import { CopyOutlined, RedoOutlined } from "@ant-design/icons"
 import copy from "copy-to-clipboard"
 import { notification } from "antd"
-import * as uuid from "uuid"
-
-export const generateEMail = () => uuid.v4().replace(/-/g, "").substr(0, 12)
 
 const EMailAddressContainer = styled.div`
 	width: 70%;
@@ -34,7 +31,7 @@ const StyledCopyOutlined = styled(CopyOutlined)`
 	right: 10px;
 `
 
-export const EMailAddress = ({ email, onNewAddress }: { email: string; onNewAddress: (email: string) => void }) => {
+export const EMailAddress = ({ email, onNewAddress }: { email: string; onNewAddress: () => void }) => {
 	const onCopy = useCallback(() => {
 		notification.success({
 			message: "Copied to clipboard",
@@ -42,17 +39,13 @@ export const EMailAddress = ({ email, onNewAddress }: { email: string; onNewAddr
 		copy(email + "@devmail.io")
 	}, [email])
 
-	const onNewAddressClick = useCallback(() => {
-		onNewAddress(generateEMail())
-	}, [onNewAddress])
-
 	return (
 		<EMailAddressContainer>
 			<EMailAddressBox>
 				{email}@devmail.io
 				<StyledCopyOutlined onClick={onCopy} />
 			</EMailAddressBox>
-			<RedoOutlined onClick={onNewAddressClick} />
+			<RedoOutlined onClick={onNewAddress} />
 		</EMailAddressContainer>
 	)
 }

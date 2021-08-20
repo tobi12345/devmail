@@ -10,6 +10,7 @@ const GlobalStyles = createGlobalStyle`
 		padding: 0;
 		width: 700px;
 		height: 530px;
+		margin: auto;
 	}
 	#root {
 		width: 700px;
