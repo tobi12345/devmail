@@ -8,8 +8,9 @@ services:
         command: ./dist/b-main/index.js
         ports:
             - 4000:4000
+            - 4001:4001
         networks:
-            - pp
+            - devmail
             - proxy
         depends_on:
             - postgres
@@ -17,33 +18,41 @@ services:
             - "traefik.enable=true"
             - "traefik.http.middlewares.backend_stripprefix.stripprefix.prefixes=/api"
             - "traefik.http.routers.backend.middlewares=backend_stripprefix"
-            - "traefik.http.routers.backend.rule=Host(`pp.kleselcodes.de`) && PathPrefix(`/api`)"
+            - "traefik.http.routers.backend.rule=Host(`devmail.kleselcodes.de`) && PathPrefix(`/api`)"
             - "traefik.http.routers.backend.entrypoints=websecure"
             - "traefik.http.routers.backend.tls.certresolver=myresolver"
             - "traefik.http.services.backend.loadbalancer.server.port=4000"
+
+            - "traefik.tcp.routers.smtp.rule=Host(`mail.kleselcodes.de)"
+            - "traefik.tcp.routers.smtp.entrypoints=smtp"
+            - "traefik.tcp.services.smtp.loadbalancer.server.port=4001"
+            - "traefik.tcp.routers.smtp1.rule=Host(`mail.kleselcodes.de`)"
+            - "traefik.tcp.routers.smtp1.entrypoints=smtp2"
+            - "traefik.tcp.services.smtp1.loadbalancer.server.port=4001"
+            - "traefik.tcp.routers.smtptls.rule=Host(`mail.kleselcodes.de`)"
+            - "traefik.tcp.routers.smtptls.entrypoints=smtpsecure"
+            - "traefik.tcp.services.smtptls.loadbalancer.server.port=4001"
+            - "traefik.tcp.routers.smtptls.tls.certresolver=certificate"
+
     postgres:
         image: postgres
         restart: always
+        ports:
+            - "5435:5432"
         environment:
             POSTGRES_PASSWORD: postgres
             POSTGRES_USER: postgres
-            POSTGRES_DB: pp
+            POSTGRES_DB: devmail
         networks:
-            - pp
+            - devmail
         volumes:
             - pgdata:/var/lib/postgresql/data
 
-    redis:
-        image: redis
-        restart: always
-        networks:
-            - pp
-
-    game-ui:
+    inbox-ui:
         build:
             context: .
-            dockerfile: ./config_docker/dashboard.ui.dockerfile
-        env_file: game.production.env
+            dockerfile: ./config_docker/inbox.ui.dockerfile
+        env_file: inbox.production.env
         networks:
             - proxy
         expose:
@@ -52,12 +61,12 @@ services:
             - backend
         labels:
             - "traefik.enable=true"
-            - "traefik.http.routers.game-ui.rule=Host(`pp.kleselcodes.de`)"
-            - "traefik.http.routers.game-ui.entrypoints=websecure"
-            - "traefik.http.routers.game-ui.tls.certresolver=myresolver"
+            - "traefik.http.routers.inbox-ui.rule=Host(`devmail.kleselcodes.de`)"
+            - "traefik.http.routers.inbox-ui.entrypoints=websecure"
+            - "traefik.http.routers.inbox-ui.tls.certresolver=myresolver"
 
 networks:
-    pp:
+    devmail:
     proxy:
         external:
             name: "traefik_proxy"

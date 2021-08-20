@@ -6,5 +6,6 @@ COPY . .
 RUN npm ci
 RUN npm run build
 
-EXPOSE 3000
+EXPOSE 4000
+EXPOSE 4001
 ENTRYPOINT ["node"]
