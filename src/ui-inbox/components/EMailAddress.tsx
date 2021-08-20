@@ -12,7 +12,7 @@ const EMailAddressContainer = styled.div`
 	grid-column-gap: 10px;
 	align-items: center;
 	font-size: 17px;
-	color: #222f3e;
+	color: #000;
 	font-family: monospace;
 `
 
@@ -20,8 +20,8 @@ const EMailAddressBox = styled.div`
 	border-radius: 10px;
 	text-align: center;
 	padding: 5px 30px;
-	background-color: #bdc3c7;
 	position: relative;
+	border: 2px solid #54a0ff;
 `
 
 const StyledCopyOutlined = styled(CopyOutlined)`
