@@ -53,6 +53,7 @@ export const SMTPServer = (stuff: IStuff) => {
 		logger: true,
 		rejectUnauthorized: false,
 		requestCert: false,
+		disabledCommands: ["STARTTLS", "AUTH"],
 	})
 
 	const start = () => {
