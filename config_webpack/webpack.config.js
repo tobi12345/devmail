@@ -1,6 +1,8 @@
 const path = require("path")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 const FaviconsWebpackPlugin = require("favicons-webpack-plugin")
+const webpack = require("webpack")
+const getEnvs = require("./getEnvs")
 
 module.exports = (envs) => {
 	return {
@@ -30,6 +32,10 @@ module.exports = (envs) => {
 				inject: "body",
 			}),
 			new FaviconsWebpackPlugin(path.resolve(__dirname, "..", "assets", "email.png")),
-		],
+		].concat(
+			envs.type === "extension"
+				? [new webpack.DefinePlugin(getEnvs(path.resolve(__dirname, "..", `${envs.project}.env`)))]
+				: [],
+		),
 	}
 }

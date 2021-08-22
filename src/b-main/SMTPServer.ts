@@ -50,6 +50,9 @@ export const SMTPServer = (stuff: IStuff) => {
 			callback(null, { user: "123" })
 		},
 		authOptional: true,
+		logger: true,
+		rejectUnauthorized: false,
+		requestCert: false,
 	})
 
 	const start = () => {
