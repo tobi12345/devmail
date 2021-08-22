@@ -42,11 +42,14 @@ export const SMTPServer = (stuff: IStuff) => {
 			stream.on("end", callback)
 		},
 		onConnect(session, callback) {
+			console.log("onConnect")
 			callback(null)
 		},
 		onAuth(auth, session, callback) {
+			console.log("onAuth")
 			callback(null, { user: "123" })
 		},
+		authOptional: true,
 	})
 
 	const start = () => {
