@@ -1,14 +1,15 @@
 version: "3.3"
 services:
-    backend:
+    devmail_backend:
         build:
             context: .
             dockerfile: ./config_docker/backend.dockerfile
         env_file: production.env
         command: ./dist/b-main/index.js
+        expose:
+            - "5000"
         ports:
-            - 4000:4000
-            - 4001:4001
+            - 587:5001
         networks:
             - devmail
             - proxy
@@ -16,29 +17,27 @@ services:
             - postgres
         labels:
             - "traefik.enable=true"
-            - "traefik.http.middlewares.backend_stripprefix.stripprefix.prefixes=/api"
-            - "traefik.http.routers.backend.middlewares=backend_stripprefix"
-            - "traefik.http.routers.backend.rule=Host(`devmail.kleselcodes.de`) && PathPrefix(`/api`)"
-            - "traefik.http.routers.backend.entrypoints=websecure"
-            - "traefik.http.routers.backend.tls.certresolver=myresolver"
-            - "traefik.http.services.backend.loadbalancer.server.port=4000"
+            - "traefik.http.middlewares.devmail_backend_stripprefix.stripprefix.prefixes=/api"
+            - "traefik.http.routers.devmail_backend.middlewares=devmail_backend_stripprefix"
+            - "traefik.http.routers.devmail_backend.rule=Host(`devmail.kleselcodes.de`) && PathPrefix(`/api`)"
+            - "traefik.http.routers.devmail_backend.entrypoints=websecure"
+            - "traefik.http.routers.devmail_backend.tls.certresolver=myresolver"
+            - "traefik.http.services.devmail_backend.loadbalancer.server.port=5000"
 
-            - "traefik.tcp.routers.smtp.rule=Host(`mail.kleselcodes.de)"
-            - "traefik.tcp.routers.smtp.entrypoints=smtp"
-            - "traefik.tcp.services.smtp.loadbalancer.server.port=4001"
-            - "traefik.tcp.routers.smtp1.rule=Host(`mail.kleselcodes.de`)"
-            - "traefik.tcp.routers.smtp1.entrypoints=smtp2"
-            - "traefik.tcp.services.smtp1.loadbalancer.server.port=4001"
-            - "traefik.tcp.routers.smtptls.rule=Host(`mail.kleselcodes.de`)"
-            - "traefik.tcp.routers.smtptls.entrypoints=smtpsecure"
-            - "traefik.tcp.services.smtptls.loadbalancer.server.port=4001"
-            - "traefik.tcp.routers.smtptls.tls.certresolver=certificate"
+            # - "traefik.tcp.routers.smtp.rule=HostSNI(`*`)"
+            # - "traefik.tcp.routers.smtp.entrypoints=smtp"
+            # - "traefik.tcp.services.smtp.loadbalancer.server.port=5001"
+            # - "traefik.tcp.routers.smtp1.rule=HostSNI(`*`)"
+            # - "traefik.tcp.routers.smtp1.entrypoints=smtp2"
+            # - "traefik.tcp.services.smtp1.loadbalancer.server.port=5001"
+            # - "traefik.tcp.routers.smtptls.rule=HostSNI(`*`)"
+            # - "traefik.tcp.routers.smtptls.entrypoints=smtpsecure"
+            # - "traefik.tcp.services.smtptls.loadbalancer.server.port=5001"
+            # - "traefik.tcp.routers.smtptls.tls.certresolver=certificate"
 
     postgres:
         image: postgres
         restart: always
-        ports:
-            - "5435:5432"
         environment:
             POSTGRES_PASSWORD: postgres
             POSTGRES_USER: postgres
@@ -58,7 +57,7 @@ services:
         expose:
             - "80"
         depends_on:
-            - backend
+            - devmail_backend
         labels:
             - "traefik.enable=true"
             - "traefik.http.routers.inbox-ui.rule=Host(`devmail.kleselcodes.de`)"

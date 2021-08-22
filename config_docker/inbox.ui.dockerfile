@@ -1,15 +1,15 @@
-FROM node:14.2 AS build
+FROM node:15.6 AS build
 
 WORKDIR /app
 COPY . .
 
 RUN npm ci
 RUN npm run build
-RUN npm run build:game
+RUN npm run build:inbox
 
 FROM nginx:stable
 
-COPY --from=build /app/dist_ui_game/ /usr/share/nginx/html/
+COPY --from=build /app/dist_ui_inbox/ /usr/share/nginx/html/
 
 COPY ./config_nginx/compression.conf /etc/nginx/conf.d/
 COPY ./config_nginx/default.conf /etc/nginx/conf.d/
