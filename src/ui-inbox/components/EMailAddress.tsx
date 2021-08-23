@@ -2,7 +2,7 @@ import React, { useCallback } from "react"
 import styled from "styled-components"
 import { CopyOutlined, RedoOutlined } from "@ant-design/icons"
 import copy from "copy-to-clipboard"
-import { notification } from "antd"
+import { notification, Tooltip } from "antd"
 import { useConfig } from "../Config"
 
 const EMailAddressContainer = styled.div`
@@ -48,7 +48,9 @@ export const EMailAddress = ({ email, onNewAddress }: { email: string; onNewAddr
 				{email}@{emailAddressUrl}
 				<StyledCopyOutlined onClick={onCopy} />
 			</EMailAddressBox>
-			<RedoOutlined onClick={onNewAddress} />
+			<Tooltip title="New address. Your current address and all mails will be lost">
+				<RedoOutlined onClick={onNewAddress} />
+			</Tooltip>
 		</EMailAddressContainer>
 	)
 }

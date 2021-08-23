@@ -1,4 +1,4 @@
-import { Collapse, Empty } from "antd"
+import { Collapse, Empty, Typography } from "antd"
 import { ParsedMail } from "mailparser"
 import React, { useEffect, useRef, useState } from "react"
 import styled from "styled-components"
@@ -54,7 +54,7 @@ export const EMailList = ({ email }: { email: string }) => {
 	if (emails.length === 0) {
 		return (
 			<EMailListContainer>
-				<Empty description="no emails so fare :)" />
+				<Empty description={<Typography.Title level={4}>no mails so far</Typography.Title>} />
 			</EMailListContainer>
 		)
 	}
@@ -106,8 +106,8 @@ const EMailPreview = ({ email }: { email: ParsedMail }) => {
 			return
 		}
 
-		containerRef.current.innerHTML = DOMPurify.sanitize(email.html)
+		containerRef.current.innerHTML = DOMPurify.sanitize(email.html || email.textAsHtml || email.text)
 	}, [email.textAsHtml])
 
-	return <EMailPreviewContainer ref={containerRef}>{email.textAsHtml}</EMailPreviewContainer>
+	return <EMailPreviewContainer ref={containerRef} />
 }
