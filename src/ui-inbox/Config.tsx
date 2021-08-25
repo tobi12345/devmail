@@ -5,6 +5,7 @@ export interface IConfig {
 	backendUrl: string
 	socketBackendUrl: string
 	emailAddressUrl: string
+	isExtension: boolean
 }
 
 enum EnvVars {
@@ -23,6 +24,7 @@ export const config = configFromEnv<IConfig>({
 			backendUrl: `http${useSSL ? "s" : ""}://${backendUrl}`,
 			socketBackendUrl: `ws${useSSL ? "s" : ""}://${backendUrl}`,
 			emailAddressUrl,
+			isExtension: chrome.storage !== undefined,
 		}
 	},
 })

@@ -1,10 +1,11 @@
 import { useState, useEffect, useCallback } from "react"
 import * as uuid from "uuid"
+import { useConfig } from "../Config"
 
 export const generateEMail = () => uuid.v4().replace(/-/g, "").substr(0, 12)
 
-const getEmailAddress = async () => {
-	if (chrome.storage) {
+const getEmailAddress = async (isExtension: boolean) => {
+	if (isExtension) {
 		return new Promise<string | undefined>((resolve) => {
 			chrome.storage.local.get("emailaddress", (res) => resolve(res.emailaddress))
 		})
@@ -12,8 +13,8 @@ const getEmailAddress = async () => {
 	return localStorage.getItem("emailaddress")
 }
 
-const storeEmailAddress = (emailaddress: string) => {
-	if (chrome.storage) {
+const storeEmailAddress = (emailaddress: string, isExtension: boolean) => {
+	if (isExtension) {
 		chrome.storage.local.set({ emailaddress })
 		return
 	}
@@ -22,19 +23,20 @@ const storeEmailAddress = (emailaddress: string) => {
 
 export const useEmailAddress = () => {
 	const [emailAddress, _setEmailAddress] = useState<string | undefined>()
+	const config = useConfig()
 
 	useEffect(() => {
-		getEmailAddress().then((address) => {
+		getEmailAddress(config.isExtension).then((address) => {
 			if (address) _setEmailAddress(address)
 			else setEmailAddress()
 		})
-	}, [])
+	}, [config.isExtension])
 
 	const setEmailAddress = useCallback(() => {
 		const address = generateEMail()
-		storeEmailAddress(address)
+		storeEmailAddress(address, config.isExtension)
 		_setEmailAddress(address)
-	}, [])
+	}, [config.isExtension])
 
 	return {
 		emailAddress,
