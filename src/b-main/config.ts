@@ -14,6 +14,11 @@ export interface IConfig extends IBaseConfig {
 		port: number
 	}
 	passwordSecret: string
+	telegram: {
+		botToken: string
+		chatID: string
+		enabled: boolean
+	}
 }
 
 const requiredEnvVars: string[] = []
@@ -45,8 +50,12 @@ export const configFromEnv = (): IConfig => {
 		smtp: {
 			port: parseInt(process.env["SMTP_PORT"] || "4000"),
 		},
+		telegram: {
+			botToken: process.env["TELEGRAM_BOT_TOKEN"] || "",
+			chatID: process.env["TELEGRAM_CHAT_ID"] || "",
+			enabled: process.env["TELEGRAM_ENABLED"] === "true",
+		},
 	}
 }
 
 const getInteger = (value: any) => (!isNaN(value) ? parseInt(value) : undefined)
-const getBoolean = (value: any) => Boolean(value)

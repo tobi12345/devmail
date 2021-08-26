@@ -1,9 +1,15 @@
-export const logExceptions = () => {
-	process.on("unhandledRejection", (error) => {
+export const logExceptions = (sendLog?: (text: string) => void) => {
+	process.on("unhandledRejection", (error: Error) => {
 		console.error(error)
+		if (sendLog) {
+			sendLog(error.toString())
+		}
 	})
 
-	process.once("uncaughtException", (err) => {
-		console.error(err)
+	process.on("uncaughtException", (error: Error) => {
+		console.error(error)
+		if (sendLog) {
+			sendLog(error.toString())
+		}
 	})
 }

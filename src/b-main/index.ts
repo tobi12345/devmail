@@ -8,12 +8,12 @@ import * as Express from "express"
 import { SMTPServer } from "./SMTPServer"
 import { DailyCleanup } from "./DailyCleanup"
 import { logExceptions } from "../b-shared/logExceptions"
+import { SendTelegramMessage } from "../b-shared/SendTelegramMessage"
 
 require("source-map-support").install()
 
 const nodeEnv = process.env.NODE_ENV
 console.info(`[ENV] is ${nodeEnv}`)
-logExceptions()
 
 export interface IStuff {
 	database: IDatabaseClient
@@ -24,6 +24,11 @@ export interface IStuff {
 loadEnvFromDotenv(nodeEnv || "development")
 ;(async () => {
 	const config = configFromEnv()
+	logExceptions(
+		config.telegram.enabled
+			? SendTelegramMessage(config.telegram.botToken, config.telegram.chatID, "DevMail Backend")
+			: undefined,
+	)
 
 	const { database, schema } = await connectAndSetupDatabase(config.database)
 	console.info(`[DATABASE] connected and initialized (v${schema.getVersion()})`)
