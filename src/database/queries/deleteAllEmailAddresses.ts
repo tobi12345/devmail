@@ -1,8 +1,9 @@
-import { IDatabaseClient } from "postgres-schema-builder"
-import { EmailAddressesTable } from "../tables"
+import { IDatabaseClient, SQL } from "postgres-schema-builder"
 
-const deleteAllEmailAddressesQuery = EmailAddressesTable.delete([] as [])
+const deleteAllEmailAddressesQuery = SQL.raw(`
+	TRUNCATE TABLE email_addresses; 
+`)
 
 export const deleteAllEmailAddresses = async (database: IDatabaseClient) => {
-	return await database.query(deleteAllEmailAddressesQuery([] as []))
+	return await database.query(deleteAllEmailAddressesQuery)
 }
