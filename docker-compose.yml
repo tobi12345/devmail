@@ -15,8 +15,9 @@ services:
         networks:
             - devmail
             - proxy
-        depends_on:
-            - postgres
+            - dbproxy
+        # depends_on:
+        #     - postgres
         labels:
             - "traefik.enable=true"
             - "traefik.http.middlewares.devmail_backend_stripprefix.stripprefix.prefixes=/api"
@@ -26,28 +27,17 @@ services:
             - "traefik.http.routers.devmail_backend.tls.certresolver=myresolver"
             - "traefik.http.services.devmail_backend.loadbalancer.server.port=5000"
 
-            # - "traefik.tcp.routers.smtp.rule=HostSNI(`*`)"
-            # - "traefik.tcp.routers.smtp.entrypoints=smtp"
-            # - "traefik.tcp.services.smtp.loadbalancer.server.port=5001"
-            # - "traefik.tcp.routers.smtp1.rule=HostSNI(`*`)"
-            # - "traefik.tcp.routers.smtp1.entrypoints=smtp2"
-            # - "traefik.tcp.services.smtp1.loadbalancer.server.port=5001"
-            # - "traefik.tcp.routers.smtptls.rule=HostSNI(`*`)"
-            # - "traefik.tcp.routers.smtptls.entrypoints=smtpsecure"
-            # - "traefik.tcp.services.smtptls.loadbalancer.server.port=5001"
-            # - "traefik.tcp.routers.smtptls.tls.certresolver=certificate"
-
-    postgres:
-        image: postgres
-        restart: always
-        environment:
-            POSTGRES_PASSWORD: postgres
-            POSTGRES_USER: postgres
-            POSTGRES_DB: devmail
-        networks:
-            - devmail
-        volumes:
-            - pgdata:/var/lib/postgresql/data
+    # postgres:
+    #     image: postgres
+    #     restart: always
+    #     environment:
+    #         POSTGRES_PASSWORD: postgres
+    #         POSTGRES_USER: postgres
+    #         POSTGRES_DB: devmail
+    #     networks:
+    #         - devmail
+    #     volumes:
+    #         - pgdata:/var/lib/postgresql/data
 
     inbox-ui:
         build:
@@ -71,6 +61,9 @@ networks:
     proxy:
         external:
             name: "traefik_proxy"
+    dbproxy:
+        external:
+            name: "postgres_pg"
 
 volumes:
     pgdata:
