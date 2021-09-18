@@ -8,3 +8,4 @@ export interface IEmailDBResult extends TableRecord<typeof Tables.emails> {}
 
 export const EmailAddressesTable = Table(Tables, "email_addresses")
 export const EmailsTable = Table(Tables, "emails")
+export const StatisticsTable = Table(Tables, "statistics")

@@ -43,4 +43,25 @@ export namespace TablesV1 {
 		email: { type: JSONType<ParsedMail>(), nullable: false },
 		...baseSchema,
 	})
+
+	export const statistics = TableSchema({
+		statistic_id: {
+			type: ColumnType.Integer,
+			primaryKey: true,
+			createIndex: true,
+			nullable: false,
+			autoIncrement: true,
+		},
+		topic: {
+			type: ColumnType.Text,
+			createIndex: true,
+			nullable: false,
+		},
+		value: {
+			type: ColumnType.Integer,
+			nullable: false,
+			createIndex: true,
+		},
+		...baseSchema,
+	})
 }
