@@ -8,5 +8,5 @@ interface CreateEmailAddressArgs {
 }
 
 export const getEmailAddress = async (database: IDatabaseClient, { emailAddress }: CreateEmailAddressArgs) => {
-	return await database.query(getEmailAddressQuery([emailAddress]))
+	return (await database.query(getEmailAddressQuery([emailAddress])))[0]
 }
