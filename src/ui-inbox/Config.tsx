@@ -20,11 +20,19 @@ export const config = configFromEnv<IConfig>({
 		const emailAddressUrl = getValue(EnvVars.REACT_APP_EMAIL_ADDRESS_URL)
 		const useSSL = getValue(EnvVars.REACT_APP_USE_SSL) === "true"
 
+		const isExtension = (() => {
+			try {
+				return chrome.storage !== undefined
+			} catch (err) {
+				return false
+			}
+		})()
+
 		return {
 			backendUrl: `http${useSSL ? "s" : ""}://${backendUrl}`,
 			socketBackendUrl: `ws${useSSL ? "s" : ""}://${backendUrl}`,
 			emailAddressUrl,
-			isExtension: chrome.storage !== undefined,
+			isExtension,
 		}
 	},
 })
