@@ -1,8 +1,7 @@
 # devmail
 
-colors: https://flatuicolors.com/palette/ca
+A tool that allows to generate mail addresses and revive emails with just one click.
+Intended for developer testing their web apps
+Available as a web app and a chrome extension.
 
-# todos
-
--   remove favicon webpack plugin
--   cron job delete all mails every 24h
+Link: https://devmail.kleselcodes.de/
